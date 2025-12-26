@@ -1,204 +1,232 @@
-# 📊 Data-Driven Stock Analysis  
-### Organizing, Cleaning, and Visualizing Market Trends
+# 📊 Data-Driven Stock Market Analysis  
+**End-to-End Analytics using Python, MySQL, Streamlit & Power BI**
 
 ---
 
 ## 📌 Project Overview
+This project demonstrates a **complete data analytics pipeline** for stock market data — from **data ingestion and storage** to **interactive dashboards** and **business-ready BI reports**.
 
-This project implements a **complete end-to-end data analytics pipeline** for analyzing stock market performance.  
-It starts from **raw YAML stock data**, processes it through a **custom ETL pipeline**, stores clean data in **MySQL**, and delivers insights via **Streamlit** and **Power BI dashboards**.
-
-The solution helps investors, analysts, and decision-makers understand:
-- Overall market health
-- Top gainers and losers
-- Market sentiment (Bullish / Neutral / Bearish)
-- Risk and volatility trends
+The project is designed to showcase:
+- Real-world financial data modeling
+- KPI calculation using DAX
+- Dashboard storytelling
+- Tool interoperability (Python → SQL → Power BI)
 
 ---
 
-## 🎯 Problem Statement
-
-Stock market data is often available in raw, semi-structured formats that are difficult to analyze directly.  
-Manual analysis makes it hard to identify:
-- Market direction
-- Consistent performers
-- Risk exposure
-- Sector-wise trends
-
-This project solves that by building a **scalable analytics workflow** that converts raw data into **actionable insights**.
+## 🧱 Tech Stack
+- **Programming**: Python  
+- **Database**: MySQL (XAMPP)
+- **Libraries**: Pandas, NumPy  
+- **App Dashboard**: Streamlit  
+- **BI Tool**: Power BI Desktop  
+- **Data Format**: CSV (used as fallback for BI)
 
 ---
 
-## 🛠️ Tech Stack
+## 🗂️ Data Schema
 
-### Languages & Libraries
-- Python
-- Pandas, NumPy
-- PyYAML
-- SQLAlchemy
-- Matplotlib / Seaborn
-- Streamlit
+**Table: `stock_prices`**
 
-### Database
-- MySQL (XAMPP)
-
-### Visualization
-- Streamlit (interactive analytics)
-- Power BI (executive dashboards)
-
----
-
-## 📂 Data Source
-
-- Raw data provided in **YAML format**
-- Organized as:
-  - Month-wise folders  
-  - Date-wise YAML files  
-- Each file contains:
-  - Ticker
-  - Date & time
-  - Open, High, Low, Close
-  - Volume
-
-This structure closely resembles real-world market data feeds.
+| Column | Description |
+|------|------------|
+| id | Unique row identifier |
+| ticker | Stock symbol |
+| trade_date | Trading timestamp |
+| month | Trading month |
+| open | Opening price |
+| high | Highest price |
+| low | Lowest price |
+| close | Closing price |
+| volume | Trade volume |
+| created_at | Data insertion time |
 
 ---
 
-## ⚙️ ETL Pipeline Architecture
+## 🔄 Data Flow Architecture
+Python (ETL)
+↓
+MySQL Database
+↓
+CSV Export
+↓
+Power BI Dashboard
 
-### 1️⃣ Extraction (`etl/extract.py`)
-- Recursively scans data folders
-- Reads YAML files
-- Converts them into Python dictionaries
 
-### 2️⃣ Transformation (`etl/transform.py`)
-- Date normalization
-- Numeric cleaning
-- Missing value handling
-- Data validation
-
-### 3️⃣ Loading (`etl/load.py`)
-- Generates:
-  - Symbol-wise CSV files (one per stock)
-  - Combined dataset
-  - Monthly summary reports
-
-### 4️⃣ Orchestration (`etl/run_etl.py`)
-- Controls the full ETL flow
-- Ensures correct execution order
-- Handles logging and errors
-
----
-
-## 🗄️ Database Layer (MySQL)
-
-- Database: `stock_analysis`
-- Table: `stock_prices`
-
-**Columns**
-- ticker
-- date
-- month
-- open
-- high
-- low
-- close
-- volume
-
-Clean data is loaded using a dedicated Python loader script, enabling SQL-based analytics and BI integration.
-
----
-
-## 📊 Data Analysis Performed
-
-- Yearly stock returns
-- Green vs Red stock classification
-- Market breadth (% green stocks)
-- Average price and volume
-- Volatility (standard deviation of returns)
-- Cumulative returns
-- Monthly top gainers and losers
-- Sector-wise performance
-
----
-
-## 🖥️ Streamlit Dashboard
-
-**Purpose**
-- Interactive, analyst-focused exploration
-
-**Features**
-- Market overview KPIs
-- Stock-level filters
-- Volatility analysis
-- Correlation heatmap
-- Sector performance
-
-Streamlit enables rapid, Python-driven analytics and real-time interaction.
+> ⚠️ CSV import was used in Power BI for stability during presentation time.
 
 ---
 
 ## 📈 Power BI Dashboard
 
-**Purpose**
-- Executive-level reporting and decision support
+### ✅ Page 1 – Market Overview (Completed)
 
-**Key Visuals**
-- Market overview KPIs
-- Green vs Red stocks
-- Market sentiment card
-- Market health gauge
-- Conditional formatting using DAX
-
-**Market Sentiment Logic**
-- ≥ 60% green stocks → Bullish
-- 40–59% → Neutral
-- < 40% → Bearish
+This page provides a **high-level snapshot of the entire market** using KPI cards and a global date slicer.
 
 ---
 
-## 🎯 Business Use Cases
+## 🧩 Page 1 Components
 
-- Stock performance ranking
-- Market health assessment
-- Investment decision support
-- Risk and volatility evaluation
-- Sector-wise comparison
-
----
-
-## 🚀 Project Outcomes
-
-- Built a real-world ETL pipeline
-- Created clean, analysis-ready financial data
-- Integrated database and BI tools
-- Delivered interactive dashboards
-- Developed a portfolio-grade analytics project
+### 🔹 Global Date Slicer
+- Visual: **Slicer**
+- Field: `Trade Date`
+- Type: **Between**
+- Scope: Filters all visuals on Page 1
 
 ---
 
-## 🏁 Conclusion
+## 📊 KPI Cards (Exact DAX Used)
 
-This project demonstrates the **complete lifecycle of a data analytics solution**, from raw data ingestion to business-ready insights.  
-It follows industry-aligned practices and is suitable for **Data Analyst / Business Analyst / Junior Data Engineer** roles.
+### 🟦 Total Stocks
+**Purpose**: Market breadth
+
+```DAX
+Total Stocks = COUNT(stock_prices[ticker])
+🟦 Average Close Price
+
+Purpose: Overall price level
+
+```DAX
+Avg Close Price = AVERAGE(stock_prices[close])
+Formatting
+
+Display Units: Thousands (K)
+
+Decimal Places: 2
+🟦 Daily Return (Calculated Column)
+
+```DAX
+Daily Return =
+DIVIDE(
+    stock_prices[close] - stock_prices[open],
+    stock_prices[open]
+)
+🟦 Average Daily Return (%)
+
+Purpose: Market performance indicator
+
+```DAX
+Avg Daily Return (%) = AVERAGE(stock_prices[Daily Return])
+Formatting
+
+Percentage
+
+2 decimal places
+
+🟦 Total Volume
+
+Purpose: Market liquidity
+
+```DAX
+Total Volume = SUM(stock_prices[volume])
+
+
+Formatting
+
+Display Units: Billions (Bn)
+
+🎨 Conditional Logic (Optional)
+Market Direction Label
+
+```DAX
+Market Color =
+IF(
+    stock_prices[Daily Return] >= 0,
+    "Green",
+    "Red"
+)
+
+
+Used for conditional formatting or sentiment cards.
+
+📐 Page Layout
+
+```DAX
+[ Trade Date Slicer ]
+
+[ Total Stocks ] [ Avg Close Price ] [ Avg Daily Return (%) ] [ Total Volume ]
+
+
+Design Principles:
+
+Executive-friendly
+
+One-glance insights
+
+Clean & minimal UI
+
+🎯 Business Use Cases
+
+Market trend monitoring
+
+Investor performance tracking
+
+Educational financial analytics
+
+Portfolio research dashboards
+
+🚀 Future Enhancements
+📌 Power BI
+
+Top Gainers & Losers page
+
+Volatility & risk analysis
+
+Correlation heatmap
+
+Monthly & yearly performance views
+
+Drill-through stock detail pages
+
+Conditional color-driven sentiment cards
+
+📌 Data & Backend
+
+Live MySQL connector with scheduled refresh
+
+Incremental data loading
+
+Indexing for performance optimization
+
+📌 Advanced Analytics
+
+Moving averages (SMA / EMA)
+
+Volatility indicators
+
+Sharpe ratio & risk metrics
+
+ML-based trend prediction
+
+📌 Deployment
+
+Publish to Power BI Service
+
+Role-based access (RLS)
+
+Automated refresh pipelines
+
+✅ Project Status
+
+✔ Data ingestion completed
+✔ KPI modeling completed
+✔ Power BI Page 1 finalized
+✔ Presentation-ready
+
+👤 Author
+
+Bhuvana PS
+Data Analytics | Python | SQL | Power BI | Streamlit
+
+⭐ If you like this project, feel free to fork, star, and explore further!
+
 
 ---
 
-## 📌 How to Run (High Level)
+If you want next:
+- **GitHub project description + tags**
+- **Viva / interview Q&A**
+- **Page 2 – Top Gainers & Losers (step-by-step)**
+- **Power BI storytelling script**
 
-1. Run ETL pipeline  
-   ```bash
-   python etl/run_etl.py
-2. Load data into MySQL
-   ```bash
-   python database/db_loader.py
-3. Launch Streamlit app
-  ```bash
-   streamlit run app.py
-4. Open Power BI file and refresh data source
-
-
-Author
-Bhuvaneswari G
-Data Analytics Project
-
+Just tell me.
