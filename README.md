@@ -85,12 +85,15 @@ This page provides a **high-level snapshot of the entire market** using KPI card
 
 ```DAX
 Total Stocks = COUNT(stock_prices[ticker])
+
 🟦 Average Close Price
 
 Purpose: Overall price level
 
 ```DAX
 Avg Close Price = AVERAGE(stock_prices[close])
+
+
 Formatting
 
 Display Units: Thousands (K)
