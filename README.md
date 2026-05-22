@@ -80,7 +80,7 @@ This page provides a **high-level snapshot of the entire market** using KPI card
 
 ---
 
-### 🟦 Total Stocks
+## 🟦 Total Stocks
 **Purpose**: Market breadth
 
 ```DAX
@@ -95,10 +95,9 @@ Avg Close Price = AVERAGE(stock_prices[close])
 
 
 Formatting
-
 Display Units: Thousands (K)
-
 Decimal Places: 2
+
 🟦 Daily Return (Calculated Column)
 
 ```DAX
