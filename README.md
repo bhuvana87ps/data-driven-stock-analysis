@@ -75,7 +75,7 @@ This page provides a **high-level snapshot of the entire market** using KPI card
 
 ---
 
-## 📊 KPI Cards (Exact DAX Used)
+# 📊 KPI Cards (Exact DAX Used)
 
 
 ---
